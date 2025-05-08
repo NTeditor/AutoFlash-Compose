@@ -14,9 +14,16 @@ fun App() {
 
 
 fun main() = application {
-    FileKit.init(appId = "MyApplication")
+    System.setProperty("skiko.renderApi", "OPENGL")
+    FileKit.init(appId = "AutoFlash")
 
-    Window(onCloseRequest = ::exitApplication) {
+    Window(
+        onCloseRequest = {
+            Shell.stop()
+            exitApplication()
+        },
+        title = "AutoFlash"
+    ) {
         App()
     }
 }

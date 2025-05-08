@@ -1,15 +1,23 @@
 package screen
 
 import Shell
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import androidx.compose.ui.graphics.Color
 import screen.viewmodel.HomeViewModel
+import ui.theme.ConsoleStyle
 
 @Composable
 fun HomeScreen() {
@@ -172,12 +180,31 @@ fun HomeView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Card(
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(0.4f)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.4f),
+                    shape = RoundedCornerShape(20.dp),
                 ) {
-                    Column {
-                        Text(viewModel.logText.value)
+                    val scrollState = rememberLazyListState()
+
+                    LazyColumn(
+                        state = scrollState,
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        item {
+                            Text(
+                                text = viewModel.logText.value,
+                                style = ConsoleStyle
+                            )
+                        }
+                    }
+
+                    // Автопрокрутка вниз при новых записях
+                    LaunchedEffect(viewModel.logText.value) {
+                        scrollState.animateScrollToItem(0)
                     }
                 }
+
                 Button(onClick = {
                     Shell.stop()
                 }) {
