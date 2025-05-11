@@ -2,9 +2,13 @@ package screen.main
 
 import Shell
 import ShellResult
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.openFilePicker
+import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -72,13 +76,27 @@ class ViewModel : ViewModel() {
 
 
     fun flashBoot() {
+        logText.clear()
+        logText.add("Прошивка Boot:")
         scope.launch {
-            logText.add("Прошивка Boot: \n")
-
+            val file = FileKit.openFilePicker(type = FileKitType.File(listOf("img", "bin")))
+            if (file != null) {
+                Shell(listOf("fastboot", "flash", "boot", file.path)).start().collect {
+                    when (it) {
+                        is ShellResult.Output -> logText.add(it.output)
+                        is ShellResult.ExitCode -> logText.add("ExitCode: ${it.exitCode}")
+                        is ShellResult.IsSuccess -> {}
+                    }
+                }
+                logText.add("Готово!")
+            } else {
+                logText.add("Отмена..")
+            }
         }
     }
 
     fun flashGSI() {
-
+        logText.clear()
+        logText.add("Прошивка GSI:")
     }
 }

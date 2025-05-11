@@ -102,12 +102,12 @@ fun RebootMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.system_to_fastboot)) },
                 leadingIcon = { Icon(Icons.Filled.Build, contentDescription = null) },
-                onClick = { /* Do something... */ }
+                onClick = { viewModel.rebootS2("fastboot") }
             )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.system_to_recovery)) },
                 leadingIcon = { Icon(painterResource(Res.drawable.ic_reset_wrench), contentDescription = null) },
-                onClick = { /* Do something... */ }
+                onClick = { viewModel.rebootS2("recovery") }
             )
 
             HorizontalDivider()
@@ -115,13 +115,13 @@ fun RebootMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.fastboot_to_system)) },
                 leadingIcon = { Icon(Icons.Filled.Android, contentDescription = null) },
-                onClick = { /* Do something... */ }
+                onClick = { viewModel.rebootF2("") }
             )
 
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.fastboot_to_recovery)) },
                 leadingIcon = { Icon(painterResource(Res.drawable.ic_reset_wrench), contentDescription = null) },
-                onClick = { /* Do something... */ }
+                onClick = { viewModel.rebootF2("recovery") }
             )
         }
     }
@@ -143,12 +143,12 @@ fun FlashMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.flash_boot)) },
                 leadingIcon = { Icon(Icons.Filled.Terminal, contentDescription = null) },
-                onClick = { /* Do something... */ }
+                onClick = { viewModel.flashBoot() }
             )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.flash_gsi)) },
                 leadingIcon = { Icon(Icons.Filled.Android, contentDescription = null) },
-                onClick = { /* Do something... */ }
+                onClick = { viewModel.flashGSI() }
             )
         }
     }
