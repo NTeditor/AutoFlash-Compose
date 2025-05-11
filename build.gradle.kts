@@ -24,12 +24,12 @@ dependencies {
     implementation(compose.desktop.currentOs)
     implementation(compose.material3)
     implementation(compose.materialIconsExtended)
-    implementation("io.github.vinceglb:filekit-dialogs:0.10.0-beta03")
-    implementation("io.github.vinceglb:filekit-dialogs-compose:0.10.0-beta03")
-    implementation("io.github.vinceglb:filekit-core:0.10.0-beta03")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
-    implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
+    implementation(compose.components.resources)
+    implementation(libs.filekit.core)
+    implementation(libs.filekit.dialogs)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.lifecycle.viewmodel.compose)
 }
 
 compose.desktop {

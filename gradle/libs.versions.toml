@@ -1,0 +1,15 @@
+[versions]
+fileKit = "0.10.0-beta03"
+coroutines = "1.10.2"
+kotlin = "2.1.20"
+serialization = "1.8.1"
+viewmodel = "2.8.2"
+
+[libraries]
+filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "fileKit" }
+filekit-dialogs = { module = "io.github.vinceglb:filekit-dialogs", version.ref = "fileKit" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "viewmodel" }
+
+[plugins]
