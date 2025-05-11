@@ -55,7 +55,7 @@ fun HomeView(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.4f),
+                        .height(300.dp),
                     shape = RoundedCornerShape(20.dp),
                 ) {
                     val scrollState = rememberLazyListState()
