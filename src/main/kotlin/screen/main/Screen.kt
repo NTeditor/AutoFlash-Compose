@@ -3,6 +3,7 @@ package screen.main
 import Shell
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -61,21 +62,21 @@ fun HomeView(
 
                     LazyColumn(
                         state = scrollState,
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(15.dp).fillMaxSize()
                     ) {
-                        item {
-                            Text(
-                                text = viewModel.logText.value,
-                                style = ConsoleStyle
-                            )
+                        items(viewModel.logText) { text ->
+                            Text(text = text)
                         }
                     }
-                    LaunchedEffect(viewModel.logText.value) {
-                        scrollState.animateScrollToItem(0)
+                    LaunchedEffect(viewModel.logText.size) {
+                        if (viewModel.logText.isNotEmpty()) {
+                            scrollState.animateScrollToItem(viewModel.logText.size)
+                        }
                     }
                 }
 
                 Button(onClick = {
+                    viewModel.logText.clear()
                     Shell.stop()
                 }) {
                     Text("STOP")
