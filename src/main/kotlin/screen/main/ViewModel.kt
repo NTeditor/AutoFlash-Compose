@@ -1,26 +1,20 @@
-package screen.viewmodel
+package screen.main
 
 import Shell
 import ShellResult
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import io.github.vinceglb.filekit.FileKit
-import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
-import io.github.vinceglb.filekit.dialogs.openFilePicker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class HomeViewModel : ViewModel() {
+class ViewModel : ViewModel() {
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    val rebootMenuOpen = mutableStateOf(false)
-    val flashMenuOpen = mutableStateOf(false)
-    val devicesMenuOpen = mutableStateOf(false)
+    val showRebootMenu = mutableStateOf(false)
+    val showFlashMenu = mutableStateOf(false)
+    val showDevicesMenu = mutableStateOf(false)
     val logText = mutableStateOf("")
 
     fun adbDevices() {
@@ -79,7 +73,6 @@ class HomeViewModel : ViewModel() {
     fun flashBoot() {
         scope.launch {
             logText.value = "Прошивка Boot: \n"
-
 
         }
     }
