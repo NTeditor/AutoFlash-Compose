@@ -6,13 +6,19 @@
     <string name="fastboot_to_system">Fastboot -> System</string>
     <string name="fastboot_to_recovery">Fastboot -> Recovery</string>
 
-    <string name="reboot_menu">Reboot menu</string>
-
     <string name="flash_boot">Flash Boot</string>
     <string name="flash_gsi">Flash GSI</string>
 
-    <string name="flash_menu">Flash menu</string>
-
     <string name="adb_devices">ADB devices</string>
     <string name="fastboot_devices">Fastboot devices</string>
+
+    <string name="flashing_gsi">Flashing GSI</string>
+    <string name="flashing_boot">Flashing Boot</string>
+
+    <string name="done">Done!</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="error_code">Error code:</string>
+
+    <string name="reboot_to">Перезагрузка в</string>
 </resources>

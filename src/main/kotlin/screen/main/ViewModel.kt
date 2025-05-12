@@ -5,13 +5,13 @@ import ShellResult
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import io.github.vinceglb.filekit.FileKit
-import io.github.vinceglb.filekit.dialogs.FileKitType
-import io.github.vinceglb.filekit.dialogs.openFilePicker
-import io.github.vinceglb.filekit.path
+import com.github.nteditor.autoflash_compose.generated.resources.*
+import flashBoot
+import flashGSI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 
 class ViewModel : ViewModel() {
@@ -24,12 +24,19 @@ class ViewModel : ViewModel() {
 
     fun adbDevices() {
         scope.launch {
-            logText.add("Список устройств подключеные по ADB:")
-            Shell(listOf("adb", "devices")).start().collect { value ->
-                if (value is ShellResult.Output) {
-                    logText.add(value.output)
-                } else if (value is ShellResult.ExitCode) {
-                    logText.add("ExitCode: ${value.exitCode}")
+            logText.add(getString(Res.string.adb_devices))
+            Shell(listOf("adb", "devices")).start().collect {
+                when (it) {
+                    is ShellResult.Output -> logText.add(it.output)
+                    is ShellResult.ExitCode -> {
+                        if (it.exitCode == 0) {
+                            logText.add("${getString(Res.string.error_code)} 0")
+                            logText.add(getString(Res.string.done))
+                        } else {
+                            logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
+                        }
+                    }
+                    is ShellResult.IsSuccess -> {}
                 }
             }
         }
@@ -37,12 +44,19 @@ class ViewModel : ViewModel() {
 
     fun fastbootDevices() {
         scope.launch {
-            logText.add("Список устройств подключеные по Fastboot:")
-            Shell(listOf("fastboot", "device")).start().collect { value ->
-                if (value is ShellResult.Output) {
-                    logText.add(value.output)
-                } else if (value is ShellResult.ExitCode) {
-                    logText.add("ExitCode: ${value.exitCode}")
+            logText.add(getString(Res.string.fastboot_devices))
+            Shell(listOf("fastboot", "device")).start().collect {
+                when (it) {
+                    is ShellResult.Output -> logText.add(it.output)
+                    is ShellResult.ExitCode -> {
+                        if (it.exitCode == 0) {
+                            logText.add("${getString(Res.string.error_code)} 0")
+                            logText.add(getString(Res.string.done))
+                        } else {
+                            logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
+                        }
+                    }
+                    is ShellResult.IsSuccess -> {}
                 }
             }
         }
@@ -50,25 +64,40 @@ class ViewModel : ViewModel() {
 
     fun rebootS2(to: String) {
         scope.launch {
-            logText.add("Список устройств подключеные по Fastboot:")
-            Shell(listOf("adb", "reboot", to)).start().collect { value ->
-                if (value is ShellResult.Output) {
-                    logText.add(value.output)
-                } else if (value is ShellResult.ExitCode) {
-                    logText.add("ExitCode: ${value.exitCode}")
+            logText.add("${getString(Res.string.reboot_to)} $to")
+            Shell(listOf("adb", "reboot", to)).start().collect {
+                when (it) {
+                    is ShellResult.Output -> logText.add(it.output)
+                    is ShellResult.ExitCode -> {
+                        if (it.exitCode == 0) {
+                            logText.add("${getString(Res.string.error_code)} 0")
+                            logText.add(getString(Res.string.done))
+                        } else {
+                            logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
+                        }
+                    }
+                    is ShellResult.IsSuccess -> {}
                 }
             }
         }
     }
 
     fun rebootF2(to: String) {
+        logText.clear()
         scope.launch {
-            logText.add("Список устройств подключеные по Fastboot:")
-            Shell(listOf("fastboot", "reboot", to)).start().collect { value ->
-                if (value is ShellResult.Output) {
-                    logText.add(value.output)
-                } else if (value is ShellResult.ExitCode) {
-                    logText.add("ExitCode: ${value.exitCode}")
+            logText.add("${getString(Res.string.reboot_to)} $to")
+            Shell(listOf("fastboot", "reboot", to)).start().collect {
+                when (it) {
+                    is ShellResult.Output -> logText.add(it.output)
+                    is ShellResult.ExitCode -> {
+                        if (it.exitCode == 0) {
+                            logText.add("${getString(Res.string.error_code)} 0")
+                            logText.add(getString(Res.string.done))
+                        } else {
+                            logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
+                        }
+                    }
+                    is ShellResult.IsSuccess -> {}
                 }
             }
         }
@@ -77,26 +106,15 @@ class ViewModel : ViewModel() {
 
     fun flashBoot() {
         logText.clear()
-        logText.add("Прошивка Boot:")
         scope.launch {
-            val file = FileKit.openFilePicker(type = FileKitType.File(listOf("img", "bin")))
-            if (file != null) {
-                Shell(listOf("fastboot", "flash", "boot", file.path)).start().collect {
-                    when (it) {
-                        is ShellResult.Output -> logText.add(it.output)
-                        is ShellResult.ExitCode -> logText.add("ExitCode: ${it.exitCode}")
-                        is ShellResult.IsSuccess -> {}
-                    }
-                }
-                logText.add("Готово!")
-            } else {
-                logText.add("Отмена..")
-            }
+            flashBoot(logText)
         }
     }
 
     fun flashGSI() {
         logText.clear()
-        logText.add("Прошивка GSI:")
+        scope.launch {
+            flashGSI(logText)
+        }
     }
 }

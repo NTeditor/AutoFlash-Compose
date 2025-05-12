@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ui.theme.ConsoleStyle
 import com.github.nteditor.autoflash_compose.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -93,7 +92,7 @@ fun RebootMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
             .padding(3.dp)
     ) {
         IconButton(onClick = { expanded.value = !expanded.value }) {
-            Icon(Icons.Filled.RestartAlt, contentDescription = stringResource(Res.string.reboot_menu))
+            Icon(Icons.Filled.RestartAlt, contentDescription = null)
         }
         DropdownMenu(
             expanded = expanded.value,
@@ -134,7 +133,7 @@ fun FlashMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
             .padding(3.dp)
     ) {
         IconButton(onClick = { expanded.value = !expanded.value }) {
-            Icon(Icons.Filled.BuildCircle, contentDescription = stringResource(Res.string.flash_menu))
+            Icon(Icons.Filled.BuildCircle, contentDescription = null)
         }
         DropdownMenu(
             expanded = expanded.value,
@@ -161,7 +160,7 @@ fun DeviceMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
             .padding(3.dp)
     ) {
         IconButton(onClick = { expanded.value = !expanded.value }) {
-            Icon(Icons.Filled.Info, contentDescription = stringResource(Res.string.reboot_menu))
+            Icon(Icons.Filled.Info, contentDescription = null)
         }
         DropdownMenu(
             expanded = expanded.value,
