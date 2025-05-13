@@ -20,5 +20,5 @@
 
     <string name="error_code">Код ошибки:</string>
 
-    <string name="reboot_to">Reboot to</string>
+    <string name="reboot_to">Перезагрузка в</string>
 </resources>

@@ -7,12 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BuildCircle
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.RestartAlt
-import androidx.compose.material.icons.filled.Android
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Terminal
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -75,10 +70,9 @@ fun HomeView(
                 }
 
                 Button(onClick = {
-                    viewModel.logText.clear()
                     Shell.stop()
-                }) {
-                    Text("STOP")
+                }, enabled = !viewModel.enableButton) {
+                    Text(stringResource(Res.string.cancel))
                 }
             }
         }
@@ -91,7 +85,7 @@ fun RebootMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
         modifier = Modifier
             .padding(3.dp)
     ) {
-        IconButton(onClick = { expanded.value = !expanded.value }) {
+        IconButton(onClick = { expanded.value = !expanded.value }, enabled = viewModel.enableButton) {
             Icon(Icons.Filled.RestartAlt, contentDescription = null)
         }
         DropdownMenu(
@@ -101,12 +95,18 @@ fun RebootMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.system_to_fastboot)) },
                 leadingIcon = { Icon(Icons.Filled.Build, contentDescription = null) },
-                onClick = { viewModel.rebootS2("fastboot") }
+                onClick = {
+                    expanded.value = !expanded.value
+                    viewModel.rebootS2("fastboot")
+                }
             )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.system_to_recovery)) },
                 leadingIcon = { Icon(painterResource(Res.drawable.ic_reset_wrench), contentDescription = null) },
-                onClick = { viewModel.rebootS2("recovery") }
+                onClick = {
+                    expanded.value = !expanded.value
+                    viewModel.rebootS2("recovery")
+                }
             )
 
             HorizontalDivider()
@@ -114,13 +114,19 @@ fun RebootMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.fastboot_to_system)) },
                 leadingIcon = { Icon(Icons.Filled.Android, contentDescription = null) },
-                onClick = { viewModel.rebootF2("") }
+                onClick = {
+                    expanded.value = !expanded.value
+                    viewModel.rebootF2("")
+                }
             )
 
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.fastboot_to_recovery)) },
                 leadingIcon = { Icon(painterResource(Res.drawable.ic_reset_wrench), contentDescription = null) },
-                onClick = { viewModel.rebootF2("recovery") }
+                onClick = {
+                    expanded.value = !expanded.value
+                    viewModel.rebootF2("recovery")
+                }
             )
         }
     }
@@ -132,7 +138,7 @@ fun FlashMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
         modifier = Modifier
             .padding(3.dp)
     ) {
-        IconButton(onClick = { expanded.value = !expanded.value }) {
+        IconButton(onClick = { expanded.value = !expanded.value }, enabled = viewModel.enableButton) {
             Icon(Icons.Filled.BuildCircle, contentDescription = null)
         }
         DropdownMenu(
@@ -142,12 +148,18 @@ fun FlashMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.flash_boot)) },
                 leadingIcon = { Icon(Icons.Filled.Terminal, contentDescription = null) },
-                onClick = { viewModel.flashBoot() }
+                onClick = {
+                    expanded.value = !expanded.value
+                    viewModel.flashBoot()
+                }
             )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.flash_gsi)) },
                 leadingIcon = { Icon(Icons.Filled.Android, contentDescription = null) },
-                onClick = { viewModel.flashGSI() }
+                onClick = {
+                    expanded.value = !expanded.value
+                    viewModel.flashGSI()
+                }
             )
         }
     }
@@ -159,7 +171,7 @@ fun DeviceMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
         modifier = Modifier
             .padding(3.dp)
     ) {
-        IconButton(onClick = { expanded.value = !expanded.value }) {
+        IconButton(onClick = { expanded.value = !expanded.value }, enabled = viewModel.enableButton) {
             Icon(Icons.Filled.Info, contentDescription = null)
         }
         DropdownMenu(
@@ -169,12 +181,18 @@ fun DeviceMenu(expanded: MutableState<Boolean>, viewModel: ViewModel) {
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.adb_devices)) },
                 leadingIcon = { Icon(Icons.Filled.Terminal, contentDescription = null) },
-                onClick = { viewModel.adbDevices() }
+                onClick = {
+                    expanded.value = !expanded.value
+                    viewModel.adbDevices()
+                }
             )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.fastboot_devices)) },
                 leadingIcon = { Icon(Icons.Filled.Android, contentDescription = null) },
-                onClick = { viewModel.fastbootDevices() }
+                onClick = {
+                    expanded.value = !expanded.value
+                    viewModel.fastbootDevices()
+                }
             )
         }
     }

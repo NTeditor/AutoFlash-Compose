@@ -11,25 +11,34 @@ import io.github.vinceglb.filekit.path
 import org.jetbrains.compose.resources.getString
 
 suspend fun flashGSI(logText: MutableList<String>) {
+    var exit = false
     logText.add(getString(Res.string.flashing_gsi))
     val file = FileKit.openFilePicker(type = FileKitType.File(listOf("img", "bin")))
     if (file != null) {
         Shell(listOf("fastboot", "erase", "system")).start().collect {
             if (it is ShellResult.Output) {
                 logText.add(it.output)
+            } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
+                exit = true
             }
         }
+        if (exit) return
         Shell(listOf("fastboot", "delete-logical-partition", "product_a")).start().collect {
             if (it is ShellResult.Output) {
                 logText.add(it.output)
+            } else if (it is ShellResult.ExitCode) {
+                exit = true
             }
         }
+        if (exit) return
         Shell(listOf("fastboot", "delete-logical-partition", "product_b")).start().collect {
             if (it is ShellResult.Output) {
                 logText.add(it.output)
+            } else if (it is ShellResult.ExitCode) {
+                exit = true
             }
         }
-
+        if (exit) return
         Shell(listOf("fastboot", "flash", "system", file.path)).start().collect {
             when (it) {
                 is ShellResult.Output -> logText.add(it.output)
@@ -44,7 +53,6 @@ suspend fun flashGSI(logText: MutableList<String>) {
                 is ShellResult.IsSuccess -> {}
             }
         }
-
     } else {
         logText.add(getString(Res.string.cancel))
     }
