@@ -7,42 +7,53 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.github.nteditor.autoflash_compose.generated.resources.*
+import com.github.nteditor.autoflash_compose.generated.resources.Res
+import com.github.nteditor.autoflash_compose.generated.resources.adb_devices
+import com.github.nteditor.autoflash_compose.generated.resources.error_code
+import com.github.nteditor.autoflash_compose.generated.resources.fastboot_devices
 import flashBoot
 import flashGSI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import rebootF2
+import rebootS2
 
 
 class ViewModel : ViewModel() {
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    val showRebootMenu = mutableStateOf(false)
-    val showFlashMenu = mutableStateOf(false)
-    val showDevicesMenu = mutableStateOf(false)
+    var showRebootMenu by mutableStateOf(false)
+        private set
+    var showFlashMenu by mutableStateOf(false)
+        private set
+    var showDevicesMenu by mutableStateOf(false)
+        private set
     var logText = mutableStateListOf<String>()
     var enableButton by mutableStateOf(true)
+        private set
+
+    fun updateUI(
+        showRebootMenu: Boolean? = null,
+        showFlashMenu: Boolean? = null,
+        showDevicesMenu: Boolean? = null,
+    ) {
+        if (showRebootMenu != null) this.showRebootMenu = showRebootMenu
+        if (showFlashMenu != null) this.showFlashMenu = showFlashMenu
+        if (showDevicesMenu != null) this.showDevicesMenu = showDevicesMenu
+    }
 
     fun adbDevices() {
-        logText.clear()
         scope.launch {
+            logText.clear()
             enableButton = false
             logText.add(getString(Res.string.adb_devices))
             Shell(listOf("adb", "devices")).start().collect {
-                when (it) {
-                    is ShellResult.Output -> logText.add(it.output)
-                    is ShellResult.ExitCode -> {
-                        if (it.exitCode == 0) {
-                            logText.add("${getString(Res.string.error_code)} 0")
-                            logText.add(getString(Res.string.done))
-                        } else {
-                            logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
-                        }
-                    }
-
-                    is ShellResult.IsSuccess -> {}
+                if (it is ShellResult.Output) {
+                    logText.add(it.output)
+                } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
+                    logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
                 }
             }
             enableButton = true
@@ -50,23 +61,15 @@ class ViewModel : ViewModel() {
     }
 
     fun fastbootDevices() {
-        logText.clear()
         scope.launch {
+            logText.clear()
             enableButton = false
             logText.add(getString(Res.string.fastboot_devices))
             Shell(listOf("fastboot", "device")).start().collect {
-                when (it) {
-                    is ShellResult.Output -> logText.add(it.output)
-                    is ShellResult.ExitCode -> {
-                        if (it.exitCode == 0) {
-                            logText.add("${getString(Res.string.error_code)} 0")
-                            logText.add(getString(Res.string.done))
-                        } else {
-                            logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
-                        }
-                    }
-
-                    is ShellResult.IsSuccess -> {}
+                if (it is ShellResult.Output) {
+                    logText.add(it.output)
+                } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
+                    logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
                 }
             }
             enableButton = true
@@ -76,52 +79,21 @@ class ViewModel : ViewModel() {
     fun rebootS2(to: String) {
         scope.launch {
             enableButton = false
-            logText.add("${getString(Res.string.reboot_to)} $to")
-            Shell(listOf("adb", "reboot", to)).start().collect {
-                when (it) {
-                    is ShellResult.Output -> logText.add(it.output)
-                    is ShellResult.ExitCode -> {
-                        if (it.exitCode == 0) {
-                            logText.add("${getString(Res.string.error_code)} 0")
-                            logText.add(getString(Res.string.done))
-                        } else {
-                            logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
-                        }
-                    }
-                    is ShellResult.IsSuccess -> {}
-                }
-            }
+            rebootS2(to, logText)
             enableButton = true
         }
     }
 
     fun rebootF2(to: String) {
-        logText.clear()
         scope.launch {
             enableButton = false
-            logText.add("${getString(Res.string.reboot_to)} $to")
-            Shell(listOf("fastboot", "reboot", to)).start().collect {
-                when (it) {
-                    is ShellResult.Output -> logText.add(it.output)
-                    is ShellResult.ExitCode -> {
-                        if (it.exitCode == 0) {
-                            logText.add("${getString(Res.string.error_code)} 0")
-                            logText.add(getString(Res.string.done))
-                        } else {
-                            logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
-                        }
-                    }
-
-                    is ShellResult.IsSuccess -> {}
-                }
-            }
+            rebootF2(to, logText)
             enableButton = true
         }
     }
 
 
     fun flashBoot() {
-        logText.clear()
         scope.launch {
             enableButton = false
             flashBoot(logText)
@@ -130,7 +102,6 @@ class ViewModel : ViewModel() {
     }
 
     fun flashGSI() {
-        logText.clear()
         scope.launch {
             enableButton = false
             flashGSI(logText)

@@ -18,11 +18,8 @@ class Shell(private val command: List<String>) {
                 if (line == null) break
                 emit(ShellResult.Output(line))
             }
-
-            emit(ShellResult.IsSuccess(true))
         } catch (e: IOException) {
-            e.printStackTrace()
-            emit(ShellResult.IsSuccess(false))
+            print("IOException")
         } finally {
             emit(ShellResult.ExitCode(proc.waitFor()))
             reader.close()

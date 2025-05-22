@@ -1,0 +1,29 @@
+import com.github.nteditor.autoflash_compose.generated.resources.Res
+import com.github.nteditor.autoflash_compose.generated.resources.done
+import com.github.nteditor.autoflash_compose.generated.resources.error_code
+import com.github.nteditor.autoflash_compose.generated.resources.reboot_to
+import org.jetbrains.compose.resources.getString
+
+suspend fun rebootF2(to: String, logText: MutableList<String>) {
+    logText.clear()
+    logText.add("${getString(Res.string.reboot_to)} $to")
+    Shell(listOf("fastboot", "reboot", to)).start().collect {
+        if (it is ShellResult.Output) {
+            logText.add(it.output)
+        } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
+            logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
+        }
+    }
+}
+
+suspend fun rebootS2(to: String, logText: MutableList<String>) {
+    logText.clear()
+    logText.add("${getString(Res.string.reboot_to)} $to")
+    Shell(listOf("adb", "reboot", to)).start().collect {
+        if (it is ShellResult.Output) {
+            logText.add(it.output)
+        } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
+            logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
+        }
+    }
+}
