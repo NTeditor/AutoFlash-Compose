@@ -4,6 +4,9 @@ import androidx.compose.ui.window.application
 import com.github.nteditor.autoflash_compose.generated.resources.Res
 import com.github.nteditor.autoflash_compose.generated.resources.app_name
 import io.github.vinceglb.filekit.FileKit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import screen.main.HomeScreen
 import ui.theme.AppTheme
@@ -22,8 +25,13 @@ fun main() = application {
 
     Window(
         onCloseRequest = {
-            Shell.stop()
-            exitApplication()
+            CoroutineScope(Dispatchers.IO).launch {
+                Shell.stop()
+                if (Shell.isAdbInstall()) {
+                    Shell.cmd(listOf("adb", "kill-server")).collect {}
+                }
+                exitApplication()
+            }
         },
         title = stringResource(Res.string.app_name)
     ) {

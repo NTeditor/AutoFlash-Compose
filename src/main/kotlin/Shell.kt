@@ -29,15 +29,17 @@ class Shell() {
         }
     }
 
-    fun checkADB(): Boolean {
-        return try {
-            val proc = ProcessBuilder("adb", "version").start()
-            val reader = BufferedReader(InputStreamReader(proc.inputStream))
-            reader.useLines { it.any { it.contains("Android Debug Bridge") } }
-        } catch (e: IOException) {
-            false
+
+        fun checkADB(): Boolean {
+            return try {
+                val proc = ProcessBuilder("adb", "version").start()
+                val reader = BufferedReader(InputStreamReader(proc.inputStream))
+                reader.useLines { it.any { it.contains("Android Debug Bridge") } }
+            } catch (e: IOException) {
+                false
+            }
         }
-    }
+
 
     companion object {
         private val processList = ArrayList<Process?>()
@@ -49,6 +51,16 @@ class Shell() {
                 }
             }
             processList.clear()
+        }
+
+        fun isAdbInstall(): Boolean {
+            return try {
+                val proc = ProcessBuilder("adb", "version").start()
+                val reader = BufferedReader(InputStreamReader(proc.inputStream))
+                reader.useLines { it.any { it.contains("Android Debug Bridge") } }
+            } catch (e: IOException) {
+                false
+            }
         }
 
         fun cmd(command: List<String>): Flow<ShellResult> = flow {
