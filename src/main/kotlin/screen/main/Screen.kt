@@ -33,10 +33,14 @@ fun HomeView(
 ) {
     Scaffold(
         topBar = {
-            TopBar {
-                RebootMenu(viewModel)
-                FlashMenu(viewModel)
-                DeviceMenu(viewModel)
+            if (viewModel.isAdbInstall) {
+                TopBar {
+                    RebootMenu(viewModel)
+                    FlashMenu(viewModel)
+                    DeviceMenu(viewModel)
+                }
+            } else {
+                viewModel.logText.add("ADB НЕ НАЙДЕН")
             }
         }
     ) {

@@ -16,7 +16,7 @@ suspend fun flashGSI(logText: MutableList<String>) {
         return
     }
 
-    Shell(listOf("fastboot", "erase", "system")).start().collect {
+    Shell().cmd(listOf("fastboot", "erase", "system")).collect {
         if (it is ShellResult.Output) {
             logText.add(it.output)
         } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
@@ -26,7 +26,7 @@ suspend fun flashGSI(logText: MutableList<String>) {
     }
 
     if (exit) return
-    Shell(listOf("fastboot", "delete-logical-partition", "product_a")).start().collect {
+    Shell().cmd(listOf("fastboot", "delete-logical-partition", "product_a")).collect {
         if (it is ShellResult.Output) {
             logText.add(it.output)
         } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
@@ -36,7 +36,7 @@ suspend fun flashGSI(logText: MutableList<String>) {
     }
 
     if (exit) return
-    Shell(listOf("fastboot", "delete-logical-partition", "product_b")).start().collect {
+    Shell().cmd(listOf("fastboot", "delete-logical-partition", "product_b")).collect {
         if (it is ShellResult.Output) {
             logText.add(it.output)
         } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
@@ -46,12 +46,14 @@ suspend fun flashGSI(logText: MutableList<String>) {
     }
 
     if (exit) return
-    Shell(listOf("fastboot", "flash", "system", file.path)).start().collect {
+    Shell().cmd(listOf("fastboot", "flash", "system", file.path)).collect {
         if (it is ShellResult.Output) {
             logText.add(it.output)
         } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
             logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
             exit = true
+        } else if (it is ShellResult.ExitCode) {
+            logText.add(getString(Res.string.done))
         }
     }
 }
@@ -60,15 +62,15 @@ suspend fun flashBoot(logText: MutableList<String>) {
     logText.clear()
     logText.add(getString(Res.string.flashing_boot))
     val file = FileKit.openFilePicker(type = FileKitType.File(listOf("img", "bin")))
-    if (file != null) {
-        Shell(listOf("fastboot", "flash", "boot", file.path)).start().collect {
-            if (it is ShellResult.Output) {
-                logText.add(it.output)
-            } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
-                logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
-            }
-        }
-    } else {
+    if (file == null) {
         logText.add(getString(Res.string.cancel))
+        return
+    }
+    Shell().cmd(listOf("fastboot", "flash", "boot", file.path)).collect {
+        if (it is ShellResult.Output) {
+            logText.add(it.output)
+        } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
+            logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
+        }
     }
 }

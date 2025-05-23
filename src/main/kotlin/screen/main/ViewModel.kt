@@ -33,6 +33,7 @@ class ViewModel : ViewModel() {
     var logText = mutableStateListOf<String>()
     var enableButton by mutableStateOf(true)
         private set
+    val isAdbInstall = Shell().checkADB()
 
     fun updateUI(
         showRebootMenu: Boolean? = null,
@@ -49,7 +50,7 @@ class ViewModel : ViewModel() {
             logText.clear()
             enableButton = false
             logText.add(getString(Res.string.adb_devices))
-            Shell(listOf("adb", "devices")).start().collect {
+            Shell().cmd(listOf("adb", "devices")).collect {
                 if (it is ShellResult.Output) {
                     logText.add(it.output)
                 } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
@@ -65,7 +66,7 @@ class ViewModel : ViewModel() {
             logText.clear()
             enableButton = false
             logText.add(getString(Res.string.fastboot_devices))
-            Shell(listOf("fastboot", "device")).start().collect {
+            Shell().cmd(listOf("fastboot", "device")).collect {
                 if (it is ShellResult.Output) {
                     logText.add(it.output)
                 } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
