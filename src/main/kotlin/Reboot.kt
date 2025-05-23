@@ -23,7 +23,7 @@ suspend fun rebootF2(to: String, logText: MutableList<String>) {
 suspend fun rebootS2(to: String, logText: MutableList<String>) {
     logText.clear()
     logText.add("${getString(Res.string.reboot_to)} $to")
-    Shell.Shell.cmd(listOf("adb", "reboot", to)).collect {
+    Shell.cmd(listOf("adb", "reboot", to)).collect {
         if (it is ShellResult.Output) {
             logText.add(it.output)
         } else if (it is ShellResult.ExitCode && it.exitCode != 0) {

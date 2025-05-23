@@ -28,8 +28,8 @@ fun main() = application {
         onCloseRequest = {
             CoroutineScope(Dispatchers.IO).launch {
                 Shell.stop()
-                if (Shell.Shell.isAdbInstall()) {
-                    Shell.Shell.cmd(listOf("adb", "kill-server")).collect {}
+                if (Shell.isAdbInstall()) {
+                    Shell.cmd(listOf("adb", "kill-server")).collect {}
                 }
                 exitApplication()
             }
