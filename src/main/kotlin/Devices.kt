@@ -1,35 +1,30 @@
 import com.github.nteditor.autoflash_compose.generated.resources.Res
-import com.github.nteditor.autoflash_compose.generated.resources.done
+import com.github.nteditor.autoflash_compose.generated.resources.adb_devices
 import com.github.nteditor.autoflash_compose.generated.resources.error_code
-import com.github.nteditor.autoflash_compose.generated.resources.reboot_to
+import com.github.nteditor.autoflash_compose.generated.resources.fastboot_devices
 import org.jetbrains.compose.resources.getString
 import shell.Shell
 import shell.ShellResult
 
-suspend fun rebootF2(to: String, logText: MutableList<String>) {
+suspend fun getAdbDevices(logText: MutableList<String>) {
     logText.clear()
-    logText.add("${getString(Res.string.reboot_to)} $to")
-    Shell.cmd(listOf("fastboot", "reboot", to)).collect {
+    logText.add(getString(Res.string.adb_devices))
+    Shell().cmd(listOf("adb", "devices")).collect {
         if (it is ShellResult.Output) {
             logText.add(it.output)
         } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
             logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
-        } else if (it is ShellResult.ExitCode) {
-            logText.add(getString(Res.string.done))
         }
     }
 }
 
-suspend fun rebootS2(to: String, logText: MutableList<String>) {
-    logText.clear()
-    logText.add("${getString(Res.string.reboot_to)} $to")
-    Shell.Shell.cmd(listOf("adb", "reboot", to)).collect {
+suspend fun getFastbootDevices(logText: MutableList<String>) {
+    logText.add(getString(Res.string.fastboot_devices))
+    Shell().cmd(listOf("fastboot", "device")).collect {
         if (it is ShellResult.Output) {
             logText.add(it.output)
         } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
             logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
-        } else if (it is ShellResult.ExitCode) {
-            logText.add(getString(Res.string.done))
         }
     }
 }

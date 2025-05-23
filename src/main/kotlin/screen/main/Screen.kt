@@ -1,6 +1,5 @@
 package screen.main
 
-import Shell
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,6 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.nteditor.autoflash_compose.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import shell.Shell
 
 @Composable
 fun HomeScreen() {

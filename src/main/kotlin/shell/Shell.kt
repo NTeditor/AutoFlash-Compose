@@ -1,3 +1,5 @@
+package shell
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -30,15 +32,15 @@ class Shell() {
     }
 
 
-        fun checkADB(): Boolean {
-            return try {
-                val proc = ProcessBuilder("adb", "version").start()
-                val reader = BufferedReader(InputStreamReader(proc.inputStream))
-                reader.useLines { it.any { it.contains("Android Debug Bridge") } }
-            } catch (e: IOException) {
-                false
-            }
+    fun checkADB(): Boolean {
+        return try {
+            val proc = ProcessBuilder("adb", "version").start()
+            val reader = BufferedReader(InputStreamReader(proc.inputStream))
+            reader.useLines { it.any { it.contains("Android Debug Bridge") } }
+        } catch (e: IOException) {
+            false
         }
+    }
 
 
     companion object {

@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import screen.main.HomeScreen
+import shell.Shell
 import ui.theme.AppTheme
 
 @Composable
@@ -27,8 +28,8 @@ fun main() = application {
         onCloseRequest = {
             CoroutineScope(Dispatchers.IO).launch {
                 Shell.stop()
-                if (Shell.isAdbInstall()) {
-                    Shell.cmd(listOf("adb", "kill-server")).collect {}
+                if (Shell.Shell.isAdbInstall()) {
+                    Shell.Shell.cmd(listOf("adb", "kill-server")).collect {}
                 }
                 exitApplication()
             }

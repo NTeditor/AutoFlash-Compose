@@ -4,6 +4,8 @@ import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.github.vinceglb.filekit.path
 import org.jetbrains.compose.resources.getString
+import shell.Shell
+import shell.ShellResult
 
 suspend fun flashGSI(logText: MutableList<String>) {
     var exit = false

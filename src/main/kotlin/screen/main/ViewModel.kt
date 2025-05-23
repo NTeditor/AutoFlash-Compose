@@ -1,24 +1,20 @@
 package screen.main
 
-import Shell
-import ShellResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.github.nteditor.autoflash_compose.generated.resources.Res
-import com.github.nteditor.autoflash_compose.generated.resources.adb_devices
-import com.github.nteditor.autoflash_compose.generated.resources.error_code
-import com.github.nteditor.autoflash_compose.generated.resources.fastboot_devices
 import flashBoot
 import flashGSI
+import getAdbDevices
+import getFastbootDevices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 import rebootF2
 import rebootS2
+import shell.Shell
 
 
 class ViewModel : ViewModel() {
@@ -47,32 +43,16 @@ class ViewModel : ViewModel() {
 
     fun adbDevices() {
         scope.launch {
-            logText.clear()
             enableButton = false
-            logText.add(getString(Res.string.adb_devices))
-            Shell().cmd(listOf("adb", "devices")).collect {
-                if (it is ShellResult.Output) {
-                    logText.add(it.output)
-                } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
-                    logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
-                }
-            }
+            getAdbDevices(logText)
             enableButton = true
         }
     }
 
     fun fastbootDevices() {
         scope.launch {
-            logText.clear()
             enableButton = false
-            logText.add(getString(Res.string.fastboot_devices))
-            Shell().cmd(listOf("fastboot", "device")).collect {
-                if (it is ShellResult.Output) {
-                    logText.add(it.output)
-                } else if (it is ShellResult.ExitCode && it.exitCode != 0) {
-                    logText.add("${getString(Res.string.error_code)} ${it.exitCode}")
-                }
-            }
+            getFastbootDevices(logText)
             enableButton = true
         }
     }
